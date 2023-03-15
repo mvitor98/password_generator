@@ -3,7 +3,6 @@ import argparse
 from random import choice, shuffle
 from itertools import combinations_with_replacement
 from statistics import stdev
-import sys
 
 parser = argparse.ArgumentParser(description="")
 parser.add_argument("-l", "--lower", type = int, default = 0, help="Lower case chars a-z")
@@ -53,20 +52,27 @@ class passwordGeneretor:
         return self.__shuffle_string(password)
     
     def __password_args(self):
-        return (args.lower, args.upper, args.digits, args.extraChars)
+        args_ = (args.lower, args.upper, args.digits, args.extraChars)
+        if sum(args_) == 0:
+            parser.print_help()
+            parser.error("No args passed before.")
+            
+        return args_
 
     def __ramdon_generated_chars(self):
-        combinations = [i for i in combinations_with_replacement(range(1, self.__num_chars + 1), 4) 
-                if sum(i) == self.__num_chars and 1.5 <= stdev(i) <= 3.2]
+        combinations = [
+            i for i in combinations_with_replacement(range(1, self.__num_chars + 1), 4) 
+            if sum(i) == self.__num_chars and 1.5 <= stdev(i) <= 3.2
+            ]
         return choice(combinations)
     
 
 if __name__ == "__main__": 
     
-    owner = input('Inform an owner for the password:\n-> ').lower()
 
     with open('generated_passwords.txt', 'a+', encoding="utf-8") as file:
         password = passwordGeneretor().password
+        owner = input('Inform an owner for the password:\n-> ').lower()
         file.writelines(f"{owner}: {password}\n")
 
     print(password)
