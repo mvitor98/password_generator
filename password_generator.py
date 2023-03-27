@@ -12,6 +12,8 @@ parser.add_argument("-e", "--extraChars", type = int, default = 0, help="Extra c
 parser.add_argument("-r", "--random", action="store_true", 
                     help="Select a random chars generator (must infor a number with -n flag)")
 parser.add_argument("-n", "--num", type= int, default= 0, help="Inform how many chars your password should have.")
+parser.add_argument("-cec", "--choseExtraChars", type= str, default= None,
+                    help="Inform extra chars if has any restrictions.")
 args = parser.parse_args()
 
 
@@ -21,7 +23,10 @@ class passwordGeneretor:
         self.__lower = string.ascii_lowercase
         self.__upper = string.ascii_uppercase
         self.__digits = string.digits
-        self.__extra_chars = "!@#4%&*()_+=-<>[]{}?/|"
+        if args.choseExtraChars:
+            self.__extra_chars = args.choseExtraChars
+        else:
+            self.__extra_chars = "!@#4%&*()_+=-<>[]{}?/|"
         self.__num_chars = args.num
         self.password = self.__build_password()
 
